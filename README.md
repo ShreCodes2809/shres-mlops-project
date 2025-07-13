@@ -1,151 +1,175 @@
-# End-to-end ML project with with MLFlow and AWS for Wine Quality Prediction
+# 🍇 Wine Quality Prediction - End-to-End ML Project with MLflow, AWS, and Docker
 
-## Workflows
+This repository implements a full-stack MLOps pipeline for wine quality prediction using `scikit-learn`, tracked with `MLflow`, containerized with `Docker`, and deployed via `AWS EC2` + `ECR` using GitHub Actions.
 
-1. Update config.yaml
-2. Update schema.yaml
-3. Update params.yaml
-4. Update the entity (`config_entity.py`)
-5. Update the configuration manager in `configuration.py`
-6. Update components
-7. Update the pipeline (`<task_pipeline>.py`)
-8. Update `main.py`
-9. Update `app.py`
+---
 
-# How to run?
-### STEPS:
+## 🔀 Workflow Overview
 
-Clone the repository
+1. Configure data ingestion and model settings via:
+
+   * `config.yaml`
+   * `params.yaml`
+   * `schema.yaml`
+
+2. Define configuration entities in `config_entity.py`
+
+3. Implement a configuration manager in `configuration.py`
+
+4. Build modular components (e.g. data ingestion, transformation, model trainer)
+
+5. Construct pipeline orchestration scripts: `pipeline/<stage>_pipeline.py`
+
+6. Define app behavior in `main.py` and `app.py`
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
 
 ```zsh
 git clone https://github.com/ShreCodes2809/shres-mlops-project.git
+cd shres-mlops-project
 ```
-### STEP 01- Create an environment after opening the repository
+
+### 2. Create and activate a virtual environment
 
 ```zsh
 python3 -m venv .mlops_env
-```
-
-```zsh
 source .mlops_env/bin/activate
 ```
 
+### 3. Install dependencies
 
-### STEP 02- install the requirements
 ```zsh
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+### 4. Run the application
 
 ```zsh
-# Finally run the following command
 python app.py
 ```
 
-Now, open your local host and port by pressing (Command + Click) -> Mac or (Ctrl + Click) otherwise. Here's an example of how it might look like:
+### 5. Once the application is running, access the app at its respective domain and port number as follows:
+
 ```zsh
 http://127.0.0.1:8080
 ```
 
+---
 
+## 📊 MLflow Tracking
 
-## MLflow
+MLflow helps track, compare, and manage ML experiments.
 
-Here's a documentation for MLFlow: [Documentation](https://mlflow.org/docs/latest/index.html)
+### 🌐 Setting Up MLflow with DagsHub
 
-### Creating a Dagshub account for model evaluation tracking:
-1. Login into [dagshub](https://dagshub.com/) using your GitHub account
-2. Click on "Create a repository" -> "Connect to a repository"
-3. Click on GitHub -> "Add/revoke access to repositories" -> Select the repository
-4. To start tracking the experiments, first copy the MLFlow tracking URI, username (since you're connected to your GitHub account, your username will usually be the same as your GitHub account) and password (or can use tokens created through `Settings -> Tokens -> Regenerate -> Copy Token`).
+1. Log in to [DagsHub](https://dagshub.com) via GitHub.
+2. Create a new repo and link your GitHub repository.
+3. Navigate to **Settings → Tokens** and generate a personal access token.
+4. Export the following environment variables:
 
-Run this to export as env variables:
-
-```zsh
-export MLFLOW_TRACKING_URI=<PASTE MLFLOW TRACKING URI HERE>
-export MLFLOW_TRACKING_USERNAME=<PASTE MLFLOW USERNAME HERE> 
-export MLFLOW_TRACKING_PASSWORD=<PASTE PASSWORD/TOKEN HERE>
+```bash
+export MLFLOW_TRACKING_URI=<YOUR_MLFLOW_TRACKING_URI>
+export MLFLOW_TRACKING_USERNAME=<YOUR_DAGSHUB_USERNAME>
+export MLFLOW_TRACKING_PASSWORD=<YOUR_DAGSHUB_TOKEN>
 ```
 
-# AWS-CICD-Deployment-with-Github-Actions
+📙 [Official MLflow Docs](https://mlflow.org/docs/latest/index.html)
 
-## 1. Login to AWS console.
+---
 
-## 2. Create IAM user for deployment
+## ☁️ AWS CI/CD Deployment with GitHub Actions
 
-	#with specific access
+### ✅ Step-by-Step Breakdown
 
-	1. EC2 access : It is virtual machine
+#### 1. **Login to AWS Console**
 
-	2. ECR: Elastic Container registry to save your docker image in aws
+#### 2. **Create an IAM User for Deployment**
 
+Attach the following policies:
 
-	#Description: About the deployment
+* `AmazonEC2FullAccess`
+* `AmazonEC2ContainerRegistryFullAccess`
 
-	1. Build docker image of the source code
+#### 3. **Create an ECR Repository**
 
-	2. Push your docker image to ECR
+Save the URI (example):
 
-	3. Launch Your EC2 
+```
+566382916292.dkr.ecr.ap-south-1.amazonaws.com/mlproj
+```
 
-	4. Pull Your image from ECR in EC2
+#### 4. **Create an EC2 Ubuntu Instance**
 
-	5. Lauch your docker image in EC2
+#### 5. **Install Docker on EC2**
 
-	#Policy:
+```bash
+sudo apt-get update -y && sudo apt-get upgrade -y
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker ubuntu
+newgrp docker
+```
 
-	1. AmazonEC2ContainerRegistryFullAccess
+#### 6. **Set Up EC2 as a GitHub Self-Hosted Runner**
 
-	2. AmazonEC2FullAccess
+`GitHub → Repo Settings → Actions → Runners → Add Runner`
+Follow the shell commands as provided for Ubuntu.
 
-	
-## 3. Create ECR repo to store/save docker image
-    - Save the URI: 566373416292.dkr.ecr.ap-south-1.amazonaws.com/mlproj
+#### 7. **Configure GitHub Secrets**
 
-	
-## 4. Create EC2 machine (Ubuntu) 
+Go to GitHub → Settings → Secrets → Actions:
 
-## 5. Open EC2 and Install docker in EC2 Machine:
-	
-	
-	#optinal
+| Key                     | Value (example)                                 |
+| ----------------------- | ----------------------------------------------- |
+| `AWS_ACCESS_KEY_ID`     | Your AWS access key                             |
+| `AWS_SECRET_ACCESS_KEY` | Your AWS secret key                             |
+| `AWS_REGION`            | `us-east-1` (or your region)                    |
+| `AWS_ECR_LOGIN_URI`     | `566382916292.dkr.ecr.ap-south-1.amazonaws.com` (first part of the URI) |
+| `ECR_REPOSITORY_NAME`   | `mlproj` (second part of the URI)                                        |
 
-	sudo apt-get update -y
+---
 
-	sudo apt-get upgrade
-	
-	#required
+## 🧠 About MLflow
 
-	curl -fsSL https://get.docker.com -o get-docker.sh
+MLflow provides:
 
-	sudo sh get-docker.sh
+* ✅ Experiment tracking
+* ✅ Reproducible runs
+* ✅ Model packaging and deployment
+* ✅ Integration with DVC, DagsHub, and cloud platforms
 
-	sudo usermod -aG docker ubuntu
+Use it to **log, compare, and promote** models seamlessly in production workflows.
 
-	newgrp docker
-	
-# 6. Configure EC2 as self-hosted runner:
-    setting>actions>runner>new self hosted runner> choose os> then run command one by one
+---
 
+## 🛠️ Tech Stack
 
-# 7. Setup github secrets:
+* **Python 3.8**
+* **scikit-learn**
+* **numpy**
+* **pandas**
+* **flask**
+* **Jupyter Notebook**
+* **MLflow**
+* **Docker**
+* **AWS EC2 + ECR**
+* **GitHub Actions**
+* **DagsHub** for experiment tracking
 
-    AWS_ACCESS_KEY_ID=
+---
 
-    AWS_SECRET_ACCESS_KEY=
+## 👨‍💻 Author
 
-    AWS_REGION = us-east-1
+**Shreyash Sahare**
+[GitHub](https://github.com/ShreCodes2809) • [LinkedIn](https://www.linkedin.com/in/shreyashsahare28/)
 
-    AWS_ECR_LOGIN_URI = demo>>  566373416292.dkr.ecr.ap-south-1.amazonaws.com
+---
 
-    ECR_REPOSITORY_NAME = simple-app
+## 🏑️ License
 
-
-
-
-## About MLflow 
-MLflow
-
- - Its Production Grade
- - Trace all of your expriements
- - Logging & tagging your model
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
