@@ -1,4 +1,4 @@
-# End-to-end ML project with with MLFlow and AWS
+# End-to-end ML project with with MLFlow and AWS for Wine Quality Prediction
 
 ## Workflows
 
@@ -17,67 +17,55 @@
 
 Clone the repository
 
-```bash
-https://github.com/entbappy/End-to-end-Machine-Learning-Project-with-MLflow
+```zsh
+git clone https://github.com/ShreCodes2809/shres-mlops-project.git
 ```
-### STEP 01- Create a conda environment after opening the repository
+### STEP 01- Create an environment after opening the repository
 
-```bash
-conda create -n mlproj python=3.8 -y
+```zsh
+python3 -m venv .mlops_env
 ```
 
-```bash
-conda activate mlproj
+```zsh
+source .mlops_env/bin/activate
 ```
 
 
 ### STEP 02- install the requirements
-```bash
+```zsh
 pip install -r requirements.txt
 ```
 
 
-```bash
+```zsh
 # Finally run the following command
 python app.py
 ```
 
-Now,
-```bash
-open up you local host and port
+Now, open your local host and port by pressing (Command + Click) -> Mac or (Ctrl + Click) otherwise. Here's an example of how it might look like:
+```zsh
+http://127.0.0.1:8080
 ```
 
 
 
 ## MLflow
 
-[Documentation](https://mlflow.org/docs/latest/index.html)
+Here's a documentation for MLFlow: [Documentation](https://mlflow.org/docs/latest/index.html)
 
-
-##### cmd
-- mlflow ui
-
-### dagshub
-[dagshub](https://dagshub.com/)
-
-MLFLOW_TRACKING_URI=https://dagshub.com/entbappy/End-to-end-Machine-Learning-Project-with-MLflow.mlflow \
-MLFLOW_TRACKING_USERNAME=entbappy \
-MLFLOW_TRACKING_PASSWORD=6824692c47a369aa6f9eac5b10041d5c8edbcef0 \
-python script.py
+### Creating a Dagshub account for model evaluation tracking:
+1. Login into [dagshub](https://dagshub.com/) using your GitHub account
+2. Click on "Create a repository" -> "Connect to a repository"
+3. Click on GitHub -> "Add/revoke access to repositories" -> Select the repository
+4. To start tracking the experiments, first copy the MLFlow tracking URI, username (since you're connected to your GitHub account, your username will usually be the same as your GitHub account) and password (or can use tokens created through `Settings -> Tokens -> Regenerate -> Copy Token`).
 
 Run this to export as env variables:
 
-```bash
-
-export MLFLOW_TRACKING_URI=https://dagshub.com/entbappy/End-to-end-Machine-Learning-Project-with-MLflow.mlflow
-
-export MLFLOW_TRACKING_USERNAME=entbappy 
-
-export MLFLOW_TRACKING_PASSWORD=6824692c47a369aa6f9eac5b10041d5c8edbcef0
-
+```zsh
+export MLFLOW_TRACKING_URI=<PASTE MLFLOW TRACKING URI HERE>
+export MLFLOW_TRACKING_USERNAME=<PASTE MLFLOW USERNAME HERE> 
+export MLFLOW_TRACKING_PASSWORD=<PASTE PASSWORD/TOKEN HERE>
 ```
-
-
 
 # AWS-CICD-Deployment-with-Github-Actions
 
