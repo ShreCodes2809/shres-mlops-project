@@ -9,10 +9,21 @@ class DataTransformationTrainingPipeline:
         pass
     
     def main(self):
-        config = ConfigurationManager()
-        data_transformation_config = config.get_data_transformation_config()
-        data_transformation = DataTransformation(config=data_transformation_config)
-        data_transformation.train_test_splitting_data()
+        try:
+            with open('artifacts.data_validation/status.txt', 'r') as f:
+                status = f.read().split(":")[-1].strip()
+            
+            if status == "True":
+                config = ConfigurationManager()
+                data_transformation_config = config.get_data_transformation_config()
+                data_transformation = DataTransformation(config=data_transformation_config)
+                data_transformation.train_test_splitting_data()
+            
+            else:
+                raise Exception("Your data schema is not valid!")
+        
+        except Exception as e:
+            print(e)
 
 
 if __name__ == '__main__':
