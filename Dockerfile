@@ -8,7 +8,7 @@ RUN apt update -y && apt install -y awscli && \
 WORKDIR /app
 
 # Copy only requirements first for better caching
-COPY requirements.txt .
+COPY . .
 
 # Upgrade pip and install dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
